@@ -1,90 +1,58 @@
-'use client';
+'use client'
 import React, { useState } from 'react'
-import toast from 'react-hot-toast';
+// import logo from '../assets/pic.png'
 
-const TodoList = () => {
+const Todo = () => {
+    const [todoList, setTodoList] = useState([])
 
-    // const [num, setNum] = useState(10);
-
-    const [taskList, setTaskList] = useState([]);
-    console.log(taskList);
-    const addTask = (e) => {
-
-        if (e.code === 'Enter') {
-
-            if (!e.target.value) {
-                alert('Enter a value to add');
-                return;
-            }
-
-            console.log(e.target.value);
-
-            const newTask = { text: e.target.value, completed: false, createdAt: new Date() };
-
-            setTaskList([...taskList, newTask]);
-
-            e.target.value = '';
-            toast.success('New Task Added Successfully');
+    const addNewTodo = (e) => {
+        if (e.code === 'Enter' && e.target.value.trim() !== "") {
+            setTodoList([...todoList, e.target.value.trim()])
+            e.target.value = "";
         }
     };
 
-    const deleteTask = (index) => {
+    const removeTodo = (index) => {
         console.log(index);
-
-        const temp = taskList;
+        const temp = todoList;
         temp.splice(index, 1);
-        setTaskList([...temp]);
-        toast.success('Task Deleted Successfully');
-    }
-
-    const toggleComplete = (index) => {
-        const temp = taskList;
-        temp[index].completed = !temp[index].completed;
-        setTaskList([...temp]);
+        setTodoList([...temp]);
     }
 
     return (
-        <div className='max-w-[80%] mx-auto'>
-            {/* {num} */}
-            {/* <button onClick={() => { setNum(num + 1); console.log(num); }}>add number</button> */}
-            <h1 className='text-5xl font-bold text-center'>ToDo List</h1>
+        <div className="p-5 bg-gradient-to-r from-blue-400 to-purple-500 flex flex-col items-center h-screen">
+            <h1 className="text-4xl font-bold text-white mb-8">My Todo List</h1>
 
-            <div className='border-2 rounded-md shadow mt-5'>
-                <div className='border-b-2 border-gray-600 p-4'>
-                    <input
-                        placeholder='Add a new task'
-                        className='border-2 border-blue-500 rounded p-3 w-full'
-                        type="text"
-                        onKeyDown={addTask}
-                    />
-                </div>
-
-                <div className='p-5'>
-                    {
-                        taskList.map((task, index) => {
-                            return <div key={index} className='shadow-md border-2 rounded-lg p-4 mb-5'>
-                                {task.completed ? (
-                                    <p className='text-sm bg-green-500 px-3 w-fit rounded-full text-white'>Complete</p>
-                                ) : (
-                                    <p className='text-sm bg-yellow-500 px-3 w-fit rounded-full text-white'>Pending</p>
-                                )}
-                                <p className={task.completed ? 'line-through' : ''}>{task.text}</p>
-                                <div className='mt-3 flex gap-3 justify-end'>
-                                    <button
-                                        onClick={() => { toggleComplete(index) }}
-                                        className='bg-blue-500 px-3 text-white rounded-full'>Edit</button>
-
-                                    <button
-                                        onClick={() => { deleteTask(index) }}
-                                        className='bg-red-500 px-3 text-white rounded-full'>Delete</button>
-                                </div>
-                            </div>
-                        })
-                    }
-                </div>
+            <div className="w-full md:w-1/2">
+                <input
+                    type="text"
+                    className="w-full p-3 rounded-lg shadow-md mb-4 border border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent placeholder-gray-500 text-gray-700"
+                    placeholder="Add a new task and press Enter"
+                    onKeyDown={addNewTodo}
+                />
             </div>
+
+            <div className="w-full md:w-1/2 bg-white shadow-lg rounded-lg p-6">
+                {todoList.length === 0 ? (
+                    <p className="text-center text-gray-500">No tasks yet. Add your first task!</p>
+                ) : (
+                    todoList.map((todo, index) => (
+                        <div key={index} className="flex justify-between items-center mb-3 p-2 rounded-lg bg-gray-100 hover:bg-gray-200 shadow-sm">
+                            <h5 className="text-lg font-semibold text-gray-800">{todo}</h5>
+                            <button
+                                className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded transition duration-200"
+                                onClick={() => removeTodo(index)}
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    ))
+                )}
+            </div>
+
+            {/* <img src={logo} alt="todo" className="w-1/2 md:w-1/4 mt-10 object-contain shadow-lg rounded-lg" /> */}
         </div>
     )
 }
 
-export default TodoList;
+export default Todo
